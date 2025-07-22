@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { authService } from '@/services/authService';
@@ -10,35 +11,72 @@ import {
   User, 
   Settings, 
   LogOut,
-  Search
+  Search,
+  Shield,
+  AlertCircle
 } from 'lucide-react';
+
+interface NavItem {
+  icon: any;
+  label: string;
+  path: string;
+  requiredRole?: 'USER' | 'ADMIN';
+}
 
 export const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const user = authService.getCurrentUserFromStorage();
+  const [user, setUser] = useState(authService.getCurrentUserFromStorage());
+  const [userRole, setUserRole] = useState(authService.getUserRole());
 
-  const handleLogout = () => {
-    authService.logout();
-    toast({
-      title: "Logged out successfully",
-      description: "You have been logged out of your account.",
-    });
-    navigate('/auth');
+  // Update user info when component mounts or auth state changes
+  useEffect(() => {
+    const currentUser = authService.getCurrentUserFromStorage();
+    const currentRole = authService.getUserRole();
+    setUser(currentUser);
+    setUserRole(currentRole);
+  }, [location.pathname]);
+
+  const handleLogout = async () => {
+    try {
+      authService.logout();
+      navigate('/auth');
+    } catch (error) {
+      console.error('Logout error:', error);
+      navigate('/auth');
+    }
   };
 
   const isActive = (path: string) => location.pathname === path;
 
-  const menuItems = [
+  // Define all navigation items with role requirements
+  const allMenuItems: NavItem[] = [
     { icon: Home, label: 'Dashboard', path: '/dashboard' },
-    { icon: Plus, label: 'Add Item', path: '/add-item' },
-    { icon: List, label: 'My Items', path: '/my-items' },
+    { icon: Plus, label: 'Add Item', path: '/add-item', requiredRole: 'USER' },
+    { icon: List, label: 'My Items', path: '/my-items', requiredRole: 'USER' },
+    { icon: Shield, label: 'Admin Panel', path: '/admin', requiredRole: 'ADMIN' },
   ];
 
-  if (user?.role === 'ADMIN') {
-    menuItems.push({ icon: Settings, label: 'Admin Panel', path: '/admin' });
-  }
+  // Filter menu items based on user role
+  const getVisibleMenuItems = (): NavItem[] => {
+    if (!userRole) return [];
+
+    return allMenuItems.filter(item => {
+      if (!item.requiredRole) return true; // Public items
+      
+      // Admin can access everything
+      if (userRole === 'ADMIN') return true;
+      
+      // User can access USER items only
+      if (userRole === 'USER' && item.requiredRole === 'USER') return true;
+      
+      return false;
+    });
+  };
+
+  const visibleMenuItems = getVisibleMenuItems();
+  const showAuthWarning = !user || !userRole;
 
   return (
     <div className="w-64 bg-gradient-card border-r border-border/50 h-screen flex flex-col">
@@ -56,32 +94,61 @@ export const Sidebar = () => {
 
       {/* User Info */}
       <div className="p-4 border-b border-border/50">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-secondary flex items-center justify-center">
-            <User className="w-5 h-5 text-secondary-foreground" />
+        {showAuthWarning ? (
+          <div className="flex items-center space-x-3 text-warning">
+            <AlertCircle className="w-5 h-5" />
+            <div>
+              <p className="font-medium text-sm">Auth Issue</p>
+              <p className="text-xs">Please log in again</p>
+            </div>
           </div>
-          <div>
-            <p className="font-medium text-foreground">{user?.name}</p>
-            <p className="text-sm text-muted-foreground">{user?.role}</p>
+        ) : (
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-secondary flex items-center justify-center">
+              <User className="w-5 h-5 text-secondary-foreground" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground">{user?.name}</p>
+              <div className="flex items-center gap-2">
+                <span className={`text-xs px-2 py-1 rounded-full ${
+                  userRole === 'ADMIN' 
+                    ? 'bg-destructive/20 text-destructive' 
+                    : 'bg-success/20 text-success'
+                }`}>
+                  {userRole}
+                </span>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 p-4">
         <div className="space-y-2">
-          {menuItems.map((item) => (
-            <Link key={item.path} to={item.path}>
-              <Button
-                variant={isActive(item.path) ? "default" : "ghost"}
-                className="w-full justify-start rounded-xl"
-                size="sm"
-              >
-                <item.icon className="w-4 h-4 mr-3" />
-                {item.label}
-              </Button>
-            </Link>
-          ))}
+          {visibleMenuItems.length > 0 ? (
+            visibleMenuItems.map((item) => (
+              <Link key={item.path} to={item.path}>
+                <Button
+                  variant={isActive(item.path) ? "default" : "ghost"}
+                  className="w-full justify-start rounded-xl"
+                  size="sm"
+                >
+                  <item.icon className="w-4 h-4 mr-3" />
+                  {item.label}
+                  {item.requiredRole === 'ADMIN' && (
+                    <Shield className="w-3 h-3 ml-auto text-destructive" />
+                  )}
+                </Button>
+              </Link>
+            ))
+          ) : (
+            <div className="p-4 text-center text-muted-foreground">
+              <AlertCircle className="w-8 h-8 mx-auto mb-2" />
+              <p className="text-sm">No accessible pages</p>
+              <p className="text-xs">Contact administrator</p>
+            </div>
+          )}
         </div>
       </nav>
 
