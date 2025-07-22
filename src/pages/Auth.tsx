@@ -1,4 +1,6 @@
+
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,16 +9,68 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Heart, Mail, Lock, User, Phone } from "lucide-react";
+import { authService } from "@/services/authService";
+import { useToast } from "@/hooks/use-toast";
 import authImage from "@/assets/auth-illustration.jpg";
 
 export const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const [registerData, setRegisterData] = useState({ 
+    name: '', 
+    email: '', 
+    password: '', 
+    phone: '' 
+  });
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => setIsLoading(false), 2000);
+    
+    try {
+      await authService.login(loginData);
+      toast({
+        title: "Welcome back!",
+        description: "You have been logged in successfully.",
+      });
+      navigate('/dashboard');
+    } catch (error: any) {
+      toast({
+        title: "Login failed",
+        description: error.response?.data?.message || "Invalid credentials. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    try {
+      await authService.register({
+        name: registerData.name,
+        email: registerData.email,
+        password: registerData.password
+      });
+      toast({
+        title: "Account created!",
+        description: "Welcome to KIIT Finder! You can now start reporting items.",
+      });
+      navigate('/dashboard');
+    } catch (error: any) {
+      toast({
+        title: "Registration failed",
+        description: error.response?.data?.message || "Failed to create account. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -71,7 +125,7 @@ export const Auth = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleLogin} className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
                         <div className="relative">
@@ -81,6 +135,8 @@ export const Auth = () => {
                             type="email"
                             placeholder="your.email@kiit.ac.in"
                             className="pl-10 h-12 rounded-2xl"
+                            value={loginData.email}
+                            onChange={(e) => setLoginData({...loginData, email: e.target.value})}
                             required
                           />
                         </div>
@@ -94,6 +150,8 @@ export const Auth = () => {
                             type="password"
                             placeholder="Enter your password"
                             className="pl-10 h-12 rounded-2xl"
+                            value={loginData.password}
+                            onChange={(e) => setLoginData({...loginData, password: e.target.value})}
                             required
                           />
                         </div>
@@ -107,12 +165,6 @@ export const Auth = () => {
                         {isLoading ? "Signing in..." : "Sign In"}
                       </Button>
                     </form>
-                    
-                    <div className="mt-6 text-center">
-                      <a href="#" className="text-sm text-primary hover:underline">
-                        Forgot your password?
-                      </a>
-                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -127,7 +179,7 @@ export const Auth = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleRegister} className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">Full Name</Label>
                         <div className="relative">
@@ -137,6 +189,8 @@ export const Auth = () => {
                             type="text"
                             placeholder="Your full name"
                             className="pl-10 h-12 rounded-2xl"
+                            value={registerData.name}
+                            onChange={(e) => setRegisterData({...registerData, name: e.target.value})}
                             required
                           />
                         </div>
@@ -150,6 +204,8 @@ export const Auth = () => {
                             type="email"
                             placeholder="your.email@kiit.ac.in"
                             className="pl-10 h-12 rounded-2xl"
+                            value={registerData.email}
+                            onChange={(e) => setRegisterData({...registerData, email: e.target.value})}
                             required
                           />
                         </div>
@@ -163,6 +219,8 @@ export const Auth = () => {
                             type="tel"
                             placeholder="+91 12345 67890"
                             className="pl-10 h-12 rounded-2xl"
+                            value={registerData.phone}
+                            onChange={(e) => setRegisterData({...registerData, phone: e.target.value})}
                             required
                           />
                         </div>
@@ -176,6 +234,8 @@ export const Auth = () => {
                             type="password"
                             placeholder="Create a strong password"
                             className="pl-10 h-12 rounded-2xl"
+                            value={registerData.password}
+                            onChange={(e) => setRegisterData({...registerData, password: e.target.value})}
                             required
                           />
                         </div>
