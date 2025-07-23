@@ -15,6 +15,7 @@ export interface RegisterRequest {
   name: string;
   email: string;
   password: string;
+  role?: string; // Optional role field for backend compatibility
 }
 
 export interface AuthResponse {

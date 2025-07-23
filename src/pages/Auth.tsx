@@ -55,7 +55,8 @@ export const Auth = () => {
       await authService.register({
         name: registerData.name,
         email: registerData.email,
-        password: registerData.password
+        password: registerData.password,
+        role: "ROLE_USER" // Backend expects ROLE_USER format
       });
       toast({
         title: "Account created!",
