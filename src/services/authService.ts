@@ -13,6 +13,13 @@ interface JWTPayload {
 export const authService = {
   async login(credentials: LoginRequest): Promise<AuthResponse> {
     try {
+      // Clear any existing expired tokens before login
+      const existingToken = this.getToken();
+      if (existingToken && !this.isValidToken(existingToken)) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
+      
       const response = await api.post('/auth/login', credentials);
       const { token, user } = response.data;
       
