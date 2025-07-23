@@ -42,6 +42,10 @@ export const authService = {
 
   async register(userData: RegisterRequest): Promise<AuthResponse> {
     try {
+      // Clear any existing expired tokens before registration
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
       const response = await api.post('/auth/register', userData);
       const { token, user } = response.data;
       
