@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Upload, MapPin, Calendar, Tag, Heart } from "lucide-react";
+import { itemService } from "@/services/itemService";
+import { CreateItemRequest } from "@/types/item";
+import { useToast } from "@/hooks/use-toast";
 import reportFoundImage from "@/assets/report-found-illustration.jpg";
 
 const categories = [
@@ -37,29 +41,42 @@ const locations = [
 ];
 
 export const ReportFound = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CreateItemRequest>({
     title: "",
     description: "",
     category: "",
+    status: "FOUND",
     location: "",
-    dateFound: "",
-    currentLocation: "",
     contactInfo: ""
   });
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: keyof CreateItemRequest, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate API call
-    setTimeout(() => {
+    
+    try {
+      await itemService.createItem(formData);
+      toast({
+        title: "Success!",
+        description: "Your found item has been reported successfully.",
+      });
+      navigate('/dashboard');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to report item. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-      // Redirect to success page or dashboard
-    }, 2000);
+    }
   };
 
   return (
@@ -104,40 +121,23 @@ export const ReportFound = () => {
                       />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="category">Category *</Label>
-                        <Select onValueChange={(value) => handleInputChange("category", value)}>
-                          <SelectTrigger className="h-12 rounded-2xl">
-                            <div className="flex items-center gap-2">
-                              <Tag className="w-4 h-4 text-muted-foreground" />
-                              <SelectValue placeholder="Select category" />
-                            </div>
-                          </SelectTrigger>
-                          <SelectContent>
-                            {categories.map((category) => (
-                              <SelectItem key={category} value={category}>
-                                {category}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="dateFound">Date Found *</Label>
-                        <div className="relative">
-                          <Calendar className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                          <Input
-                            id="dateFound"
-                            type="date"
-                            value={formData.dateFound}
-                            onChange={(e) => handleInputChange("dateFound", e.target.value)}
-                            className="pl-10 h-12 rounded-2xl"
-                            required
-                          />
-                        </div>
-                      </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="category">Category *</Label>
+                      <Select onValueChange={(value) => handleInputChange("category", value)}>
+                        <SelectTrigger className="h-12 rounded-2xl">
+                          <div className="flex items-center gap-2">
+                            <Tag className="w-4 h-4 text-muted-foreground" />
+                            <SelectValue placeholder="Select category" />
+                          </div>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories.map((category) => (
+                            <SelectItem key={category} value={category}>
+                              {category}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div className="space-y-2">
@@ -160,12 +160,12 @@ export const ReportFound = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="currentLocation">Where is it now? *</Label>
+                      <Label htmlFor="contactInfo">Contact Information *</Label>
                       <Input
-                        id="currentLocation"
-                        placeholder="e.g., Security office, With me, Hostel reception"
-                        value={formData.currentLocation}
-                        onChange={(e) => handleInputChange("currentLocation", e.target.value)}
+                        id="contactInfo"
+                        placeholder="Phone number or email for contact"
+                        value={formData.contactInfo}
+                        onChange={(e) => handleInputChange("contactInfo", e.target.value)}
                         className="h-12 rounded-2xl"
                         required
                       />
