@@ -21,9 +21,15 @@ export const authService = {
       }
       
       const response = await api.post('/auth/login', credentials);
+      
+      // Debug: Log the actual response from backend
+      console.log('Backend response:', response.data);
+      console.log('Response status:', response.status);
+      
       const { token, user } = response.data;
       
       if (!token || !user) {
+        console.error('Missing token or user in response:', { token: !!token, user: !!user });
         throw new Error('Invalid response from server');
       }
 
