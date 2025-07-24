@@ -96,7 +96,7 @@ export const authService = {
 
   async getCurrentUser(): Promise<User> {
     try {
-      const response = await api.get('/users/me');
+      const response = await api.get('/users/profile');
       return response.data;
     } catch (error) {
       // If we can't get current user, the token might be invalid
