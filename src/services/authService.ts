@@ -24,12 +24,15 @@ export const authService = {
       
       // Debug: Log the actual response from backend
       console.log('Backend response:', response.data);
+      console.log('Response keys:', Object.keys(response.data));
+      console.log('Full response object:', JSON.stringify(response.data, null, 2));
       console.log('Response status:', response.status);
       
       const { token, user } = response.data;
       
       if (!token || !user) {
         console.error('Missing token or user in response:', { token: !!token, user: !!user });
+        console.error('Available fields:', Object.keys(response.data));
         throw new Error('Invalid response from server');
       }
 
