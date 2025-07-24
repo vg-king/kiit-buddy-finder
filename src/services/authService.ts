@@ -22,22 +22,25 @@ export const authService = {
       
       const response = await api.post('/auth/login', credentials);
       
-      // Debug: Log the actual response from backend
-      console.log('Backend response:', response.data);
-      console.log('Response keys:', Object.keys(response.data));
-      console.log('Full response object:', JSON.stringify(response.data, null, 2));
-      console.log('Response status:', response.status);
+      const { token } = response.data;
       
-      const { token, user } = response.data;
-      
-      if (!token || !user) {
-        console.error('Missing token or user in response:', { token: !!token, user: !!user });
-        console.error('Available fields:', Object.keys(response.data));
-        throw new Error('Invalid response from server');
+      if (!token) {
+        throw new Error('No token received from server');
       }
 
       // Validate token before storing
-      if (this.isValidToken(token)) {
+      if (!this.isValidToken(token)) {
+        throw new Error('Invalid token received');
+      }
+
+      // Store token temporarily to make authenticated request for user info
+      localStorage.setItem('token', token);
+      
+      try {
+        // Get user info using the token
+        const user = await this.getCurrentUser();
+        
+        // Store both token and user
         this.storeAuthData(token, user);
         
         toast({
@@ -46,9 +49,11 @@ export const authService = {
           variant: "default",
         });
         
-        return response.data;
-      } else {
-        throw new Error('Invalid token received');
+        return { token, user };
+      } catch (error) {
+        // If we can't get user info, remove the token
+        localStorage.removeItem('token');
+        throw new Error('Failed to get user information');
       }
     } catch (error: any) {
       // Error is already handled by axios interceptor
