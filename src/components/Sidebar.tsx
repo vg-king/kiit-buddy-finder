@@ -77,6 +77,7 @@ export const Sidebar = () => {
 
   const visibleMenuItems = getVisibleMenuItems();
   const showAuthWarning = !user || !userRole;
+  const isLoggedIn = user && userRole;
 
   return (
     <div className="w-64 bg-gradient-card border-r border-border/50 h-screen flex flex-col">
@@ -92,9 +93,9 @@ export const Sidebar = () => {
         </Link>
       </div>
 
-      {/* User Info */}
-      <div className="p-4 border-b border-border/50">
-        {showAuthWarning ? (
+      {/* User Info - Only show auth warning if not logged in */}
+      {!isLoggedIn && (
+        <div className="p-4 border-b border-border/50">
           <div className="flex items-center space-x-3 text-warning">
             <AlertCircle className="w-5 h-5" />
             <div>
@@ -102,7 +103,12 @@ export const Sidebar = () => {
               <p className="text-xs">Please log in again</p>
             </div>
           </div>
-        ) : (
+        </div>
+      )}
+      
+      {/* Show user info when logged in */}
+      {isLoggedIn && (
+        <div className="p-4 border-b border-border/50">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full bg-gradient-secondary flex items-center justify-center">
               <User className="w-5 h-5 text-secondary-foreground" />
@@ -120,8 +126,8 @@ export const Sidebar = () => {
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Navigation */}
       <nav className="flex-1 p-4">
@@ -143,11 +149,14 @@ export const Sidebar = () => {
               </Link>
             ))
           ) : (
-            <div className="p-4 text-center text-muted-foreground">
-              <AlertCircle className="w-8 h-8 mx-auto mb-2" />
-              <p className="text-sm">No accessible pages</p>
-              <p className="text-xs">Contact administrator</p>
-            </div>
+            // Only show "No accessible pages" if user is logged in but has no access
+            isLoggedIn && (
+              <div className="p-4 text-center text-muted-foreground">
+                <AlertCircle className="w-8 h-8 mx-auto mb-2" />
+                <p className="text-sm">No accessible pages</p>
+                <p className="text-xs">Contact administrator</p>
+              </div>
+            )
           )}
         </div>
       </nav>

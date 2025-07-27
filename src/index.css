@@ -52,7 +52,7 @@
     --input: 220 13% 95%;
     --ring: 14 88% 75%;
 
-    --radius: 1rem;
+    --radius: 1.25rem; /* 20px rounded corners */
 
     /* Gradients for beautiful backgrounds */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
@@ -210,16 +210,34 @@
     }
   }
 
-  /* Status badges */
-  .badge-lost {
-    @apply bg-warning/20 text-warning-foreground border border-warning/30;
-  }
-
+  /* Modern status badges */
   .badge-found {
-    @apply bg-success/20 text-success-foreground border border-success/30;
+    @apply bg-success/20 text-success border border-success/30 rounded-full px-3 py-1 text-xs font-medium;
   }
 
-  .badge-returned {
-    @apply bg-primary/20 text-primary-foreground border border-primary/30;
+  .badge-lost {
+    @apply bg-destructive/20 text-destructive border border-destructive/30 rounded-full px-3 py-1 text-xs font-medium;
+  }
+
+  .badge-pending {
+    @apply bg-warning/20 text-warning border border-warning/30 rounded-full px-3 py-1 text-xs font-medium;
+  }
+
+  /* Hover effects for cards */
+  .hover-lift {
+    @apply transition-all duration-300 hover:transform hover:-translate-y-2 hover:shadow-soft;
+  }
+
+  /* Glassmorphism card variant */
+  .card-glass {
+    background: hsla(0, 0%, 100%, 0.15);
+    backdrop-filter: blur(12px);
+    @apply rounded-[20px] border border-white/20 shadow-gentle;
+  }
+
+  /* Primary button with modern styling */
+  .btn-primary-modern {
+    background: var(--gradient-primary);
+    @apply rounded-[20px] shadow-gentle hover:shadow-soft transition-all duration-300 transform hover:scale-105 text-primary-foreground font-medium;
   }
 }
