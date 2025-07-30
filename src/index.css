@@ -83,14 +83,14 @@
 
     --primary: 14 88% 75%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 14 88% 85%;
-    --primary-glow: 14 88% 90%;
+    --primary-light: 14 88% 65%; /* Adjusted for dark mode */
+    --primary-glow: 14 88% 25%; /* Adjusted for dark mode */
 
     --secondary: 199 89% 75%;
     --secondary-foreground: 220 13% 92%;
-    --secondary-light: 199 89% 85%;
+    --secondary-light: 199 89% 30%; /* Adjusted for dark mode */
 
-    --muted: 142 52% 75%;
+    --muted: 220 20% 20%;
     --muted-foreground: 220 13% 65%;
 
     --accent: 270 50% 75%;

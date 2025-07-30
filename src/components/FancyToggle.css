@@ -1,0 +1,110 @@
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 74px; /* smaller width */
+  height: 38px; /* smaller height */
+  cursor: pointer;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #87CEEB; /* Light mode background */
+  transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  border-radius: 38px;
+  overflow: hidden;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 30px; /* smaller handle */
+  width: 30px; /* smaller handle */
+  left: 4px;
+  bottom: 4px;
+  background: linear-gradient(180deg, #FFC107, #FDB813);
+  transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2), 0 0 10px #FDB813;
+}
+
+input:checked + .slider {
+  background-color: #1e293b; /* Dark mode background */
+}
+
+input:checked + .slider:before {
+  transform: translateX(36px); /* adjusted for new size */
+  background: linear-gradient(180deg, #E0E0E0, #F5F5F5); /* Moon gradient */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 0 10px #F5F5F5, inset 0 0 2px #ccc;
+}
+
+/* Icons inside the slider */
+.sun, .moon, .stars, .clouds {
+  position: absolute;
+  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+
+.sun {
+  top: 50%;
+  left: 19px;
+  transform: translateY(-50%);
+  opacity: 1;
+}
+
+.moon {
+  top: 50%;
+  right: 19px;
+  transform: translateY(-50%);
+  opacity: 0;
+}
+
+input:checked ~ .slider .sun {
+  opacity: 0;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+input:checked ~ .slider .moon {
+  opacity: 1;
+  transform: translateY(-50%) rotate(0);
+}
+
+/* Starry night */
+.stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+}
+
+input:checked + .slider .stars {
+    opacity: 1;
+}
+
+.star {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    animation: twinkle 1.5s infinite alternate;
+}
+
+.star-1 { top: 8px; left: 48px; width: 3px; height: 3px; animation-delay: 0s; }
+.star-2 { top: 18px; left: 55px; width: 2px; height: 2px; animation-delay: 0.5s; }
+.star-3 { top: 12px; left: 65px; width: 1px; height: 1px; animation-delay: 1s; }
+
+@keyframes twinkle {
+  from { opacity: 0.2; }
+  to { opacity: 1; }
+}

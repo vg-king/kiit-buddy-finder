@@ -99,12 +99,8 @@ const Index = () => {
                 </Link>
               </div>
             </div>
-            <div className="relative">
-              <img
-                src={heroImage}
-                alt="Students helping each other find lost items"
-                className="w-full h-auto rounded-3xl shadow-soft float"
-              />
+            <div className="relative h-96 flex items-center justify-center"> 
+              <img src={heroImage} alt="Hero Illustration" className="max-w-full h-auto rounded-lg shadow-2xl" />
             </div>
           </div>
         </div>

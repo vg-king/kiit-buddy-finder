@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Search, Plus, User, Menu } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
+import FancyToggle from "./FancyToggle";
 
 export const Header = () => {
   const location = useLocation();
@@ -17,7 +18,7 @@ export const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-gradient-card backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
@@ -47,6 +48,7 @@ export const Header = () => {
 
         {/* User Actions */}
         <div className="flex items-center space-x-2">
+          <FancyToggle />
           <Link to="/auth">
             <Button variant="outline" size="sm" className="hidden sm:flex">
               <User className="w-4 h-4 mr-2" />
@@ -68,7 +70,7 @@ export const Header = () => {
 
       {/* Mobile Navigation */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-border/50 bg-gradient-card backdrop-blur-xl">
+        <div className="md:hidden border-t border-border/50 bg-background/80 backdrop-blur-lg">
           <nav className="container mx-auto px-4 py-4 space-y-2">
             {navItems.map((item) => (
               <Link

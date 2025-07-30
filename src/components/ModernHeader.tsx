@@ -18,9 +18,8 @@ import {
   Settings, 
   LogOut, 
   Plus,
-  Moon,
-  Sun
 } from 'lucide-react';
+import FancyToggle from './FancyToggle';
 
 interface ModernHeaderProps {
   onViewChange?: (view: 'all' | 'lost' | 'found') => void;
@@ -30,7 +29,6 @@ interface ModernHeaderProps {
 export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeaderProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const user = authService.getCurrentUserFromStorage();
   const userRole = authService.getUserRole();
 
@@ -44,11 +42,6 @@ export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeader
     }
   };
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark');
-  };
-
   const getViewButtonClass = (view: string) => {
     return currentView === view 
       ? "bg-primary text-primary-foreground rounded-full px-4 py-2 text-sm font-medium transition-all duration-300"
@@ -56,7 +49,7 @@ export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeader
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
       <div className="container mx-auto flex h-16 items-center justify-between px-6">
         
         {/* Primary Action Button */}
@@ -95,18 +88,7 @@ export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeader
         <div className="flex-1 flex justify-end items-center space-x-4">
           
           {/* Dark Mode Toggle */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleDarkMode}
-            className="rounded-full"
-          >
-            {isDarkMode ? (
-              <Sun className="h-5 w-5" />
-            ) : (
-              <Moon className="h-5 w-5" />
-            )}
-          </Button>
+          <FancyToggle />
 
           {/* User Profile Dropdown */}
           <DropdownMenu>
