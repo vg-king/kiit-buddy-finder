@@ -1,73 +1,89 @@
-# Welcome to your Lovable project
+Got it 👍 You want a **README for the KIIT Finder (Lost & Found Portal UI)** project.
+Here’s a clean, professional **README.md** you can use for your frontend repo:
 
-## Project info
+````markdown
+# 🏫 KIIT Finder – Lost & Found Portal (Frontend)
 
-**URL**: https://lovable.dev/projects/00ff1e2b-1cb4-404b-a02c-12375f8a5d99
+A React-based **Lost & Found Portal** for KIIT University that helps students and staff report, search, and manage lost or found items efficiently.  
+The frontend is built with **React, Tailwind CSS, and Axios**, and communicates with the **Spring Boot backend** via secure JWT-authenticated APIs.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## ✨ Features
+- 🔐 **JWT Authentication** – Secure login & registration for students and admins.  
+- 📦 **Lost/Found Item Management** – Report lost items or add found items with details & images.  
+- 🔎 **Search & Filter** – Easily search items by category, location, or keywords.  
+- 🖼 **Image Upload** – Upload item images for better identification.  
+- 👨‍🎓 **Role-based Access** – Separate dashboards for students and admin.  
+- ⚡ **Responsive UI** – Optimized for mobile and desktop.  
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/00ff1e2b-1cb4-404b-a02c-12375f8a5d99) and start prompting.
+## 🛠️ Tech Stack
+- **Frontend:** React 18, Tailwind CSS, Axios, React Router  
+- **State Management:** React Hooks & Context API  
+- **Backend:** Spring Boot (REST APIs, DTO-layered architecture, MySQL, JPA, JWT) → [Backend Repo](https://github.com/vg-king/kiit-buddy-finder)  
+- **Tools:** Postman, GitHub, VS Code  
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## 🚀 Getting Started
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/vg-king/kiit-buddy-finder.git
+cd kiit-buddy-finder
+````
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 2️⃣ Install dependencies
 
-Follow these steps:
+```bash
+npm install
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 3️⃣ Configure Environment
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Create a `.env` file in the root with:
 
-# Step 3: Install the necessary dependencies.
-npm i
+```env
+REACT_APP_API_BASE_URL=http://localhost:8080/api
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### 4️⃣ Run the app
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Now open [http://localhost:5173](http://localhost:5173) 🚀
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## 📸 Screenshots
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+(Add some UI screenshots here later)
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## 🔮 Future Enhancements
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+* ✅ Email notifications for found item matches
+* ✅ Push notifications for new reports
+* ✅ Integration with campus ID system
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/00ff1e2b-1cb4-404b-a02c-12375f8a5d99) and click on Share -> Publish.
+## 🤝 Contributing
 
-## Can I connect a custom domain to my Lovable project?
+Contributions are welcome! Fork the repo, make changes, and submit a PR.
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 📜 License
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+MIT License © 2025 Vishnu Gupta
+
+```
+
+Would you like me to also **create a matching README for the backend repo** (Spring Boot) so both repos look professional and consistent?
+```
