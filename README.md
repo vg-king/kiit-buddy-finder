@@ -1,7 +1,4 @@
-Got it 👍 You want a **README for the KIIT Finder (Lost & Found Portal UI)** project.
-Here’s a clean, professional **README.md** you can use for your frontend repo:
 
-````markdown
 # 🏫 KIIT Finder – Lost & Found Portal (Frontend)
 
 A React-based **Lost & Found Portal** for KIIT University that helps students and staff report, search, and manage lost or found items efficiently.  
